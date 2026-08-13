@@ -93040,10 +93040,10 @@ if(o.length!==0){q=A.b([B.a2Z,B.aF],q)
 B.b.R(q,A.AG(o.length,new A.avC(s),!0,t.l7))
 q.push(B.ho)
 B.b.R(p,q)}p.push(B.a3W)
-p.push(s.Ck("#ORD1265","Home Cleaning","+ \xe2\u201a\xb9499"))
-p.push(s.Ck("#ORD1264","Tuition Service","+ \xe2\u201a\xb9800"))
-p.push(s.Ck("#ORD1263","Car Rental","+ \xe2\u201a\xb91500"))
-p.push(s.Ck("#ORD1262","Healthcare","+ \xe2\u201a\xb9650"))
+p.push(s.Ck("#ORD1265","Home Cleaning","+ Rs. 499"))
+p.push(s.Ck("#ORD1264","Tuition Service","+ Rs. 800"))
+p.push(s.Ck("#ORD1263","Car Rental","+ Rs. 1,500"))
+p.push(s.Ck("#ORD1262","Healthcare","+ Rs. 650"))
 return s.jT("Earnings & Wallet",A.bn(p,B.Q,B.l,B.m))},
 G5(a,b,c){var s=null,r=b?B.a3:B.kM,q=b?B.iH:c
 r=A.yy(r,A.db(q,b?B.j:B.c_,s,16),16)
@@ -93428,7 +93428,7 @@ l.n(0,m,B.d.dk(J.bc(i.h(0,m))).length===0?"Service available":i.h(0,m))},
 $S:0}
 A.Ea.prototype={
 D(a){var s=this,r=null,q=A.eA(r,!0,B.a3x),p=s.c,o=A.S(p.h(0,"id"),r,r,r,B.hw,r,r,r),n=A.S(p.h(0,"service"),r,r,r,B.a__,r,r,r),m=A.S(p.h(0,"customer"),r,r,r,r,r,r,r)
-return A.dC(q,A.ia(A.b([o,B.b0,n,B.ho,A.eB(A.eq(!1,r,r,r,!0,r,r,r,!0,!0,B.GQ,r,r,r,r,r,!1,r,r,r,r,r,A.S(A.k(p.h(0,"phone"))+"\n"+A.k(p.h(0,"address")),r,r,r,r,r,r,r),r,m,A.jQ(r,r,B.m8,r,r,new A.aiu(s),r,r,r),r),r,r,r),s.vw(B.qj,"Date",p.h(0,"date")),s.vw(B.Kv,"Time",p.h(0,"time")),s.vw(B.eB,"Payment",p.h(0,"payment")),s.vw(B.Ls,"Amount","\xe2\u201a\xb9"+J.iI(p.h(0,"amount"),2)),s.vw(B.KS,"Status",p.h(0,"status"))],t.p),B.dB,r,B.O,!1),r)},
+return A.dC(q,A.ia(A.b([o,B.b0,n,B.ho,A.eB(A.eq(!1,r,r,r,!0,r,r,r,!0,!0,B.GQ,r,r,r,r,r,!1,r,r,r,r,r,A.S(A.k(p.h(0,"phone"))+"\n"+A.k(p.h(0,"address")),r,r,r,r,r,r,r),r,m,A.jQ(r,r,B.m8,r,r,new A.aiu(s),r,r,r),r),r,r,r),s.vw(B.qj,"Date",p.h(0,"date")),s.vw(B.Kv,"Time",p.h(0,"time")),s.vw(B.eB,"Payment",p.h(0,"payment")),s.vw(B.Ls,"Amount","\xc3\xa2\xe2\u20ac\u0161\xc2\xb9"+J.iI(p.h(0,"amount"),2)),s.vw(B.KS,"Status",p.h(0,"status"))],t.p),B.dB,r,B.O,!1),r)},
 vw(a,b,c){var s=null
 return A.eB(A.eq(!1,s,s,s,!0,s,s,s,!0,s,A.db(a,s,s,s),s,s,s,s,s,!1,s,s,s,s,s,s,s,A.S(b,s,s,s,s,s,s,s),A.S(c,s,s,s,B.bD,s,s,s),s),s,s,s)}}
 A.aiu.prototype={
@@ -93483,7 +93483,7 @@ return new A.E8("Bank & Payout",A.b([A.mg(s.d,"Account Holder",B.dG),new A.aZ(B.
 A.Qn.prototype={
 D(a){return A.dC(A.eA(null,!0,B.a2K),A.aAd(null,new A.ais(this),3,B.bI,!1),null)}}
 A.ais.prototype={
-$2(a,b){var s=null,r=this.a.c[b],q=A.S(A.k(r.h(0,"id"))+" \xe2\u20ac\xa2 "+A.k(r.h(0,"service")),s,s,s,s,s,s,s)
+$2(a,b){var s=null,r=this.a.c[b],q=A.S(A.k(r.h(0,"id"))+" \xc3\xa2\xe2\u201a\xac\xc2\xa2 "+A.k(r.h(0,"service")),s,s,s,s,s,s,s)
 return A.eB(A.eq(!1,s,s,s,!0,s,s,s,!0,!0,B.oD,s,s,s,s,s,!1,s,s,s,s,s,A.S(A.k(r.h(0,"date"))+" - "+A.k(r.h(0,"time")),s,s,s,s,s,s,s),s,q,A.S("Rs. "+J.iI(r.h(0,"amount"),0),s,s,s,B.aO,s,s,s),s),s,s,s)},
 $S:116}
 A.E9.prototype={
