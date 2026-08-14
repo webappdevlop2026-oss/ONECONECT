@@ -93819,7 +93819,7 @@ a6(){return new A.Vq(null,null)}}
 A.Vq.prototype={
 ao(){var s,r,q=this
 q.aJ()
-s=A.bN(null,A.eo(0,0,80),null,1,null,q)
+s=A.bN(null,A.eo(0,0,50),null,1,null,q)
 q.d!==$&&A.aY()
 q.d=s
 s.bk()
