@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta name="description" content="ONECONECT Admin Console — design demo for client review.">
-<title>ONECONECT Admin Console</title>
+<meta name="description" content="OneCoonect Admin Console — design demo for client review.">
+<title>OneCoonect Admin Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -213,6 +213,20 @@ td .sub{display:block;font-size:11.5px;color:var(--ink-3);}
 .chip.crit{background:var(--crit-bg);color:var(--crit);}
 .chip.info{background:var(--info-bg);color:var(--info);}
 .chip.mute{background:var(--surface-2);color:var(--ink-3);border:1px solid var(--rule);}
+.hwq{border:1px solid var(--rule);border-radius:9px;padding:11px 13px;margin-bottom:10px;background:var(--surface-2);}
+.hwq:last-child{margin-bottom:0;}
+.hwqh{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.hwn{font-size:12px;font-weight:700;color:var(--ink-3);letter-spacing:.04em;}
+.hwtitle{font-weight:600;}
+.hwopt{display:flex;align-items:center;gap:10px;padding:6px 9px;border-radius:7px;margin-bottom:5px;background:var(--surface);border:1px solid var(--rule);}
+.hwopt:last-child{margin-bottom:0;}
+.hwopt.right{border-color:var(--ok);background:var(--ok-bg);}
+.hwlet{width:26px;height:26px;flex:none;border-radius:50%;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ink-3);background:var(--surface);}
+.hwlet.on{background:var(--ok);border-color:var(--ok);color:#fff;}
+.hwtxt{flex:1;font-size:14px;}
+.hwdemo{display:flex;gap:10px;}
+.hwbtn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink-3);background:var(--surface);}
+.hwbtn.on{background:var(--ok);border-color:var(--ok);color:#fff;}
 
 .btn{
   border:1px solid var(--rule-2);background:var(--surface);
@@ -285,7 +299,7 @@ input[type=text],input[type=number],select,textarea{
 
   <aside class="rail">
     <div class="brand">
-      <div class="name">ONECONECT</div>
+      <div class="name">OneCoonect</div>
       <div class="sub">Admin Console</div>
     </div>
     <nav id="nav">
@@ -305,6 +319,7 @@ input[type=text],input[type=number],select,textarea{
       <div class="navgroup">Modules</div>
       <button class="navlink" data-page="competitions"><span class="ic">◈</span> Competitions</button>
       <button class="navlink" data-page="donation"><span class="ic">♡</span> Donation &amp; Charity</button>
+      <button class="navlink" data-page="homework"><span class="ic">✓</span> Home Works — Question Sets</button>
 
       <div class="navgroup">Operations</div>
       <button class="navlink" data-page="orders"><span class="ic">▧</span> Orders</button>
@@ -601,6 +616,80 @@ input[type=text],input[type=number],select,textarea{
         </div>
       </section>
 
+      <!-- ================= HOME WORKS ================= -->
+      <section class="page" id="page-homework">
+        <div class="hint"><b>What this screen does:</b> a teacher or coaching centre adds a question set in the Vendor app. Each question has four options — <b>A, B, C and D</b> — and the teacher taps one letter to mark the correct answer. A question cannot be saved without that mark. Here the admin can see, for every question, <b>which of the four the teacher marked correct</b>, before the set goes live to students.</div>
+
+        <div class="split">
+          <div class="card">
+            <header><h3>Question sets waiting for review</h3><span class="spacer"></span><span class="chip warn">2 pending</span></header>
+            <div class="body tight"><div class="tablewrap">
+              <table>
+                <thead><tr><th>Set</th><th>Teacher / Centre</th><th>Class</th><th>Questions</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><b>General Knowledge — Set 1</b></td><td>Bright Tuition Centre</td><td>Class 6</td><td class="num">5</td><td><span class="chip warn">Pending</span></td></tr>
+                  <tr><td>Mathematics — Chapter 3</td><td>Bright Tuition Centre</td><td>Class 6</td><td class="num">10</td><td><span class="chip warn">Pending</span></td></tr>
+                  <tr><td>English Grammar — Tenses</td><td>Sunrise Public School</td><td>Class 5</td><td class="num">12</td><td><span class="chip ok">Live</span></td></tr>
+                  <tr><td>Science — Our Body</td><td>Sunrise Public School</td><td>Class 4</td><td class="num">8</td><td><span class="chip ok">Live</span></td></tr>
+                </tbody>
+              </table>
+            </div></div>
+          </div>
+
+          <div class="card">
+            <header><h3>How the teacher marks the answer</h3></header>
+            <div class="body">
+              <p style="margin:0 0 8px">In the Vendor app the four options are shown as round buttons marked <b>A B C D</b>. The teacher taps one letter — it turns green with a tick, and the option box below it reads <i>“Option B — correct answer”</i>.</p>
+              <div class="hwdemo">
+                <span class="hwbtn">A</span><span class="hwbtn on">B</span><span class="hwbtn">C</span><span class="hwbtn">D</span>
+              </div>
+              <p style="margin:8px 0 0;color:var(--ink-3);font-size:13px">Each saved question carries both the position (<code>correctIndex</code>) and the letter (<code>correctLetter</code>), so this panel, the student’s result sheet and the printed answer key all show the same letter.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <header><h3>General Knowledge — Set 1 · Bright Tuition Centre · Class 6</h3><span class="spacer"></span><button class="btn sm">Reject</button><button class="btn sm primary">Approve &amp; publish</button></header>
+          <div class="body">
+            <div class="hwq">
+              <div class="hwqh"><span class="hwn">Q1</span><span class="hwtitle">Which planet is known as the Red Planet?</span><span class="spacer"></span><span class="chip info">Answer: B</span></div>
+              <div class="hwopt"><span class="hwlet">A</span><span class="hwtxt">Venus</span></div>
+              <div class="hwopt right"><span class="hwlet on">B</span><span class="hwtxt">Mars</span><span class="chip ok">Correct answer</span></div>
+              <div class="hwopt"><span class="hwlet">C</span><span class="hwtxt">Jupiter</span></div>
+              <div class="hwopt"><span class="hwlet">D</span><span class="hwtxt">Mercury</span></div>
+            </div>
+            <div class="hwq">
+              <div class="hwqh"><span class="hwn">Q2</span><span class="hwtitle">What is the value of 15 × 12?</span><span class="spacer"></span><span class="chip info">Answer: B</span></div>
+              <div class="hwopt"><span class="hwlet">A</span><span class="hwtxt">170</span></div>
+              <div class="hwopt right"><span class="hwlet on">B</span><span class="hwtxt">180</span><span class="chip ok">Correct answer</span></div>
+              <div class="hwopt"><span class="hwlet">C</span><span class="hwtxt">190</span></div>
+              <div class="hwopt"><span class="hwlet">D</span><span class="hwtxt">200</span></div>
+            </div>
+            <div class="hwq">
+              <div class="hwqh"><span class="hwn">Q3</span><span class="hwtitle">Who wrote the national anthem of India?</span><span class="spacer"></span><span class="chip info">Answer: B</span></div>
+              <div class="hwopt"><span class="hwlet">A</span><span class="hwtxt">Bankim Chandra Chatterjee</span></div>
+              <div class="hwopt right"><span class="hwlet on">B</span><span class="hwtxt">Rabindranath Tagore</span><span class="chip ok">Correct answer</span></div>
+              <div class="hwopt"><span class="hwlet">C</span><span class="hwtxt">Sarat Chandra Chattopadhyay</span></div>
+              <div class="hwopt"><span class="hwlet">D</span><span class="hwtxt">Kazi Nazrul Islam</span></div>
+            </div>
+            <div class="hwq">
+              <div class="hwqh"><span class="hwn">Q4</span><span class="hwtitle">Water boils at what temperature at sea level?</span><span class="spacer"></span><span class="chip info">Answer: C</span></div>
+              <div class="hwopt"><span class="hwlet">A</span><span class="hwtxt">90°C</span></div>
+              <div class="hwopt"><span class="hwlet">B</span><span class="hwtxt">95°C</span></div>
+              <div class="hwopt right"><span class="hwlet on">C</span><span class="hwtxt">100°C</span><span class="chip ok">Correct answer</span></div>
+              <div class="hwopt"><span class="hwlet">D</span><span class="hwtxt">110°C</span></div>
+            </div>
+            <div class="hwq">
+              <div class="hwqh"><span class="hwn">Q5</span><span class="hwtitle">Which is the largest state of India by area?</span><span class="spacer"></span><span class="chip info">Answer: C</span></div>
+              <div class="hwopt"><span class="hwlet">A</span><span class="hwtxt">Madhya Pradesh</span></div>
+              <div class="hwopt"><span class="hwlet">B</span><span class="hwtxt">Maharashtra</span></div>
+              <div class="hwopt right"><span class="hwlet on">C</span><span class="hwtxt">Rajasthan</span><span class="chip ok">Correct answer</span></div>
+              <div class="hwopt"><span class="hwlet">D</span><span class="hwtxt">Uttar Pradesh</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ================= ORDERS ================= -->
       <section class="page" id="page-orders">
         <div class="hint"><b>What this screen does:</b> every booking across all categories, with the cancellation record the fine rule depends on — one free cancellation a day, then 10% off the payout each time.</div>
@@ -698,7 +787,7 @@ input[type=text],input[type=number],select,textarea{
               <div class="listrow"><div class="grow"><div class="t">Terms &amp; Conditions</div><div class="s">Last edited 12 Aug 2026</div></div><button class="btn sm">Edit</button></div>
               <div class="listrow"><div class="grow"><div class="t">Privacy Policy</div><div class="s">Last edited 12 Aug 2026</div></div><button class="btn sm">Edit</button></div>
               <div class="listrow"><div class="grow"><div class="t">Cancellation &amp; Refund Policy</div><div class="s">Not written yet</div></div><button class="btn sm">Add</button></div>
-              <div class="listrow"><div class="grow"><div class="t">About ONECONECT</div><div class="s">Last edited 03 Aug 2026</div></div><button class="btn sm">Edit</button></div>
+              <div class="listrow"><div class="grow"><div class="t">About OneCoonect</div><div class="s">Last edited 03 Aug 2026</div></div><button class="btn sm">Edit</button></div>
             </div>
           </div>
           <div class="card">
@@ -742,6 +831,7 @@ input[type=text],input[type=number],select,textarea{
     banners:['Catalogue','Banners & Promotions'],
     competitions:['Modules','Competitions'],
     donation:['Modules','Donation & Charity'],
+    homework:['Modules','Home Works — Question Sets'],
     orders:['Operations','Orders'],
     payouts:['Operations','Payouts & Charges'],
     notices:['Operations','Announcements'],
