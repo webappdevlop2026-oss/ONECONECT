@@ -106443,7 +106443,7 @@ r=B.e.a_(r>500?r-500:0,0)
 q.c.M(t.q).f.am(A.be(p,p,p,p,p,B.o,p,A.f("Account frozen \u2014 you are holding Rs. "+s+" cash. Deposit Rs. "+r+" to take new orders.",p,p,p,p,p,p,p,p,p),p,B.x,p,p,p,p,p,p,p,p,p,p))
 return}q.q(new A.aNs(q,a))
 q.q(new A.aNt(q))
-q.c.M(t.q).f.am(A.be(p,p,p,p,p,B.o,p,A.f("Order accepted. Pickup action is available in Outgoing.",p,p,p,p,p,p,p,p,p),p,B.x,p,p,p,p,p,p,p,p,p,p))},
+q.c.M(t.q).f.am(A.be(p,p,p,p,p,B.o,p,A.f("Order accepted. Pickup action is available in Ongoing.",p,p,p,p,p,p,p,p,p),p,B.x,p,p,p,p,p,p,p,p,p,p))},
 aJF(){var s,r=this,q=r.y
 if(q==null)return
 if(J.a7(q.h(0,"status"))==="In Transit"){q=r.c
@@ -106525,7 +106525,7 @@ m=p.as.length===0?o:A.er(o,o,B.y9,o,o,new A.aNT(p),o,o,o)
 l.push(A.cT(o,B.ad,!1,o,!0,B.o,o,A.d_(),o,o,o,o,o,o,2,A.d0(o,new A.cZ(4,A.O(16),B.y),o,o,o,o,o,o,!0,o,o,o,o,o,o,B.h,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"Search order, service, customer...",o,o,o,o,o,o,o,o,o,!0,!0,!1,o,B.qc,o,o,o,o,o,o,m,o,o,o,o,o),B.B,!0,o,!0,o,!1,o,B.al,o,o,o,o,o,o,o,o,1,o,o,!1,"\u2022",o,new A.aNU(p),o,o,o,!1,o,o,!1,o,!0,o,B.ac,o,o,o,o,o,o,o,o,o,o,o,o,!0,B.S,o,B.aE,o,o,o,o))
 l.push(B.a_)
 m=t.Jm
-m=A.D(new A.S(A.a(["Ongoing","Upcoming","Accepted","Outgoing","Rejected","Completed"],t.s),new A.aNV(p),m),m.i("am.E"))
+m=A.D(new A.S(A.a(["Ongoing","Upcoming","Accepted","Rejected","Completed"],t.s),new A.aNV(p),m),m.i("am.E"))
 l.push(A.aq(A.cc(m,o,o,B.ah,!1),42,o))
 l.push(B.bk)
 if(n.length===0)l.push(A.X(o,B.TJ,B.j,o,o,new A.Y(B.h,o,o,A.O(18),o,o,B.n),o,o,o,B.w7,o,o,1/0))
@@ -106599,7 +106599,7 @@ $1(a){var s,r,q,p,o,n=a.h(0,"status"),m=n==null?null:J.a7(n)
 if(m==null)m=""
 n=this.a
 s=n.at
-if(s!=="All")r=s==="Outgoing"&&m==="Accepted"||n.Qx(m)===s
+if(s!=="All")r=s==="Ongoing"&&m==="Accepted"||n.Qx(m)===s
 else r=!0
 q=m==="Accepted"||m==="In Transit"
 p=m==="In Transit"
@@ -106771,7 +106771,7 @@ A.aNL.prototype={
 $0(){return this.a.at=this.b},
 $S:0}
 A.aNW.prototype={
-$1(a5){var s,r,q,p,o="status",n="Rescheduled",m=null,l="pickupName",k="customer",j="Rejected",i="Cancelled",h="rejectReason",g="issueReason",f="rescheduleSlot",e=this.a,d=B.b.ho(e.z,a5),c=J.a7(a5.h(0,o)),b=c==="Available"||c==="Rescheduled",a=c==="Accepted",a0=c==="In Transit",a1=!b&&!a&&!a0,a2=e.at,a3=a2==="Accepted"&&a,a4=a2==="Outgoing"&&a
+$1(a5){var s,r,q,p,o="status",n="Rescheduled",m=null,l="pickupName",k="customer",j="Rejected",i="Cancelled",h="rejectReason",g="issueReason",f="rescheduleSlot",e=this.a,d=B.b.ho(e.z,a5),c=J.a7(a5.h(0,o)),b=c==="Available"||c==="Rescheduled",a=c==="Accepted",a0=c==="In Transit",a1=!b&&!a&&!a0,a2=e.at,a3=a2==="Accepted"&&a,a4=a2==="Ongoing"&&a
 if(a3){e=A.O(16)
 a2=A.bs(B.eB,1)
 s=t.p
