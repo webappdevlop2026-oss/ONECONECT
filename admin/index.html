@@ -23,6 +23,7 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
     <div class="navh">Users & Catalogue</div>
     <button class="navbtn" data-page="users">◉ Users</button>
     <button class="navbtn" data-page="products">▤ Products / Categories</button>
+    <button class="navbtn" data-page="formbuilder">▣ Service Form Builder</button>
     <button class="navbtn" data-page="promotions">▭ Posters / Banners / Slider</button>
     <div class="navh">Service Vendors</div>
     <button class="navbtn" data-page="livevendors">● Live Vendors</button>
@@ -79,7 +80,50 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
   <div class="hint"><b>Products:</b> Category and Sub-category list with image change, add, enable/disable and delete options.</div>
   <div class="two">
     <div class="card"><div class="head"><h3>Category List</h3><span class="spacer"></span><button class="btn primary" onclick="addCategory()">+ Add Category</button></div><div class="tablewrap"><table><thead><tr><th>Image</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody id="catRows"></tbody></table></div></div>
-    <div class="card"><div class="head"><h3>Sub-category List</h3><span class="spacer"></span><button class="btn primary" onclick="addSubCategory()">+ Add Sub-category</button></div><div class="tablewrap"><table><thead><tr><th>Image</th><th>Sub-category</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody id="subRows"></tbody></table></div></div>
+    <div class="card"><div class="head"><h3>Sub-category List</h3><span class="spacer"></span><button class="btn primary" onclick="addSubCategory()">+ Add Sub-category</button></div><div class="tablewrap"><table><thead><tr><th>Image</th><th>Sub-category</th><th>Category</th><th>Vendor Form</th><th>Status</th><th>Actions</th></tr></thead><tbody id="subRows"></tbody></table></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-formbuilder">
+  <div class="hint"><b>Service Form Builder:</b> Every service / sub-category keeps its own Vendor form. The fields saved here are the schema that the Vendor App will receive from the Laravel API after backend integration. One service can never accidentally reuse another service's form.</div>
+
+  <div class="two">
+    <div class="card section">
+      <div class="head"><h3>Choose Service</h3><span class="spacer"></span><button class="btn" onclick="cloneCurrentForm()">Clone Form</button></div>
+      <div class="body">
+        <div class="field"><label>Service / Sub-category</label><select id="formService" onchange="renderFormBuilder()"></select></div>
+        <div id="formMeta" class="reportnote"></div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="addFormField()">+ Add Field</button>
+          <button class="btn" onclick="addPresetField('image')">+ Image Upload</button>
+          <button class="btn" onclick="addPresetField('address')">+ Address</button>
+          <button class="btn" onclick="addPresetField('price')">+ Price</button>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>Field Label</th><th>Type</th><th>Required</th><th>Options / Note</th><th>Actions</th></tr></thead>
+          <tbody id="formFieldRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card section">
+      <div class="head"><h3>Vendor Form Preview</h3><span class="spacer"></span><span class="chip info">Demo Preview</span></div>
+      <div class="body" id="vendorFormPreview"></div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <div class="head"><h3>How it works after backend connection</h3></div>
+    <div class="body">
+      <div class="grid stats" style="margin:0">
+        <div class="card stat"><small>1. Admin</small><strong style="font-size:18px">Add Service</strong><div class="reportnote">Create service name, category, image and its own fields.</div></div>
+        <div class="card stat"><small>2. API</small><strong style="font-size:18px">Save Form Schema</strong><div class="reportnote">Laravel stores the service and field definition in MySQL.</div></div>
+        <div class="card stat"><small>3. Vendor App</small><strong style="font-size:18px">Load Correct Form</strong><div class="reportnote">Vendor taps the service and only that service's fields appear.</div></div>
+        <div class="card stat"><small>4. Listing</small><strong style="font-size:18px">Save Service Data</strong><div class="reportnote">Submitted values are stored against that service only.</div></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -146,13 +190,52 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
 <input type="file" id="imageInput" class="upload" accept="image/*">
 
 <script>
-var titles={dashboard:'Dashboard',users:'Users',products:'Products / Categories',promotions:'Posters / Banners / Slider',livevendors:'Live Vendors',pendingvendors:'Pending Vendors',service:'Service Report',rental:'Rental Report',orders:'Manage Orders',today:'Today Orders'};
+var titles={dashboard:'Dashboard',users:'Users',products:'Products / Categories',formbuilder:'Service Form Builder',promotions:'Posters / Banners / Slider',livevendors:'Live Vendors',pendingvendors:'Pending Vendors',service:'Service Report',rental:'Rental Report',orders:'Manage Orders',today:'Today Orders'};
 document.getElementById('nav').onclick=function(e){var b=e.target.closest('.navbtn');if(!b)return;document.querySelectorAll('.navbtn').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});document.getElementById('page-'+b.dataset.page).classList.add('on');document.getElementById('title').textContent=titles[b.dataset.page]||'Admin';window.scrollTo(0,0)};
 
 var dash=[['West Bengal','Dubrajpur','Rental Services','Car Rental',284,261,18,5,'₹4,86,300'],['West Bengal','Durgapur','Education Services','Home Tuition',198,184,11,3,'₹1,58,400'],['Jharkhand','Dumka','Healthcare','Doctor Appointment',143,130,9,4,'₹92,600']];
 var users=[{n:'Amit Kumar',p:'9876543210',s:'West Bengal',c:'Dubrajpur',cat:'Rental Services',sub:'Car Rental',on:true,blocked:false},{n:'Priya Sen',p:'9123456781',s:'West Bengal',c:'Durgapur',cat:'Education Services',sub:'Home Tuition',on:true,blocked:false},{n:'Rakesh Roy',p:'9000000003',s:'Jharkhand',c:'Dumka',cat:'Healthcare',sub:'Doctor Appointment',on:false,blocked:false}];
 var cats=[{n:'Rental Services',img:'https://placehold.co/80x80?text=Rental',on:true},{n:'Education Services',img:'https://placehold.co/80x80?text=Education',on:true},{n:'Healthcare',img:'https://placehold.co/80x80?text=Health',on:true},{n:'Other Services',img:'https://placehold.co/80x80?text=Other',on:true}];
 var subs=[{n:'Car Rental',cat:'Rental Services',img:'https://placehold.co/80x80?text=Car',on:true},{n:'Home Tuition',cat:'Education Services',img:'https://placehold.co/80x80?text=Tuition',on:true},{n:'Doctor Appointment',cat:'Healthcare',img:'https://placehold.co/80x80?text=Doctor',on:true},{n:'Home Cleaning',cat:'Other Services',img:'https://placehold.co/80x80?text=Clean',on:true}];
+var formSchemas={
+  'Car Rental':[
+    {label:'Vehicle Type',type:'dropdown',required:true,note:'Sedan, Hatchback, SUV, Minibus'},
+    {label:'Vehicle Name / Model',type:'text',required:true,note:''},
+    {label:'Fuel Type',type:'dropdown',required:true,note:'Petrol, Diesel, LNG, EV'},
+    {label:'Drive Option',type:'dropdown',required:true,note:'Self, Driver, Both'},
+    {label:'Price Per Day',type:'number',required:true,note:'₹'},
+    {label:'Price Per KM',type:'number',required:false,note:'₹'},
+    {label:'Service Area / Address',type:'address',required:true,note:''},
+    {label:'Vehicle Images',type:'image',required:true,note:'Max 10'}
+  ],
+  'Home Tuition':[
+    {label:'Tutor / Institute Name',type:'text',required:true,note:''},
+    {label:'Class',type:'multiselect',required:true,note:'Nursery – Class 12'},
+    {label:'Subjects',type:'text',required:true,note:'Comma separated'},
+    {label:'Fee Cycle',type:'dropdown',required:true,note:'Per Class, Monthly, Half-yearly'},
+    {label:'Fee Amount',type:'number',required:true,note:'₹'},
+    {label:'Teaching Address',type:'address',required:true,note:''},
+    {label:'Images',type:'image',required:false,note:'Max 6'}
+  ],
+  'Doctor Appointment':[
+    {label:'Doctor Name',type:'text',required:true,note:''},
+    {label:'Clinic / Hospital Name',type:'text',required:true,note:''},
+    {label:'Speciality',type:'dropdown',required:true,note:'General, Child, Gynaecology, Orthopaedic, ENT...'},
+    {label:'Qualification',type:'text',required:true,note:''},
+    {label:'Medical Registration Number',type:'text',required:true,note:''},
+    {label:'Chamber Days & Time',type:'schedule',required:true,note:'Day-wise timing'},
+    {label:'Clinic Address',type:'address',required:true,note:''},
+    {label:'Consultation Fees',type:'number',required:true,note:'₹'}
+  ],
+  'Home Cleaning':[
+    {label:'Service Name',type:'text',required:true,note:''},
+    {label:'Cleaning Type',type:'dropdown',required:true,note:'Home, Kitchen, Bathroom, Full House'},
+    {label:'Price',type:'number',required:true,note:'₹'},
+    {label:'Service Area',type:'address',required:true,note:''},
+    {label:'Available Date & Time',type:'schedule',required:true,note:''},
+    {label:'Before / After Images',type:'image',required:false,note:'Max 6'}
+  ]
+};
 var promos={
   poster:[
     {title:'Festival Service Poster',target:'Home App',img:'https://placehold.co/180x90?text=Festival+Poster',on:true,order:1},
@@ -207,8 +290,106 @@ function openUserModal(){document.getElementById('userModal').classList.add('on'
 var imageTarget=null;var imageTargetMode='products';document.getElementById('imageInput').onchange=function(e){var file=e.target.files[0];if(!file||!imageTarget)return;var reader=new FileReader();reader.onload=function(){imageTarget.img=reader.result;if(imageTargetMode==='promos')renderPromos();else renderProducts()};reader.readAsDataURL(file);e.target.value=''}
 function changeImage(type,i){imageTarget=type==='cat'?cats[i]:subs[i];imageTargetMode='products';document.getElementById('imageInput').click()}
 function changePromoImage(type,i){imageTarget=promos[type][i];imageTargetMode='promos';document.getElementById('imageInput').click()}
-function renderProducts(){document.getElementById('catRows').innerHTML=cats.map(function(x,i){return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="changeImage(\'cat\','+i+')">Change Image</button><button class="btn sm" onclick="cats['+i+'].on=!cats['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="cats.splice('+i+',1);renderProducts()">Delete</button></div></td></tr>'}).join('');document.getElementById('subRows').innerHTML=subs.map(function(x,i){return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+x.cat+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="changeImage(\'sub\','+i+')">Change Image</button><button class="btn sm" onclick="subs['+i+'].on=!subs['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="subs.splice('+i+',1);renderProducts()">Delete</button></div></td></tr>'}).join('')}
-function addCategory(){var n=prompt('Category name');if(n){cats.push({n:n,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});renderProducts()}}function addSubCategory(){var n=prompt('Sub-category name');if(!n)return;var c=prompt('Parent category','Other Services')||'Other Services';subs.push({n:n,cat:c,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});renderProducts()}
+function renderProducts(){
+  document.getElementById('catRows').innerHTML=cats.map(function(x,i){
+    return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="changeImage(\'cat\','+i+')">Change Image</button><button class="btn sm" onclick="cats['+i+'].on=!cats['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="cats.splice('+i+',1);renderProducts()">Delete</button></div></td></tr>'
+  }).join('');
+  document.getElementById('subRows').innerHTML=subs.map(function(x,i){
+    var count=(formSchemas[x.n]||[]).length;
+    return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+x.cat+'</td><td><span class="chip '+(count?'ok':'warn')+'">'+(count?count+' fields':'Form needed')+'</span></td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm primary" onclick="openFormForSub('+i+')">Edit Form</button><button class="btn sm" onclick="changeImage(\'sub\','+i+')">Change Image</button><button class="btn sm" onclick="subs['+i+'].on=!subs['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="deleteSubCategory('+i+')">Delete</button></div></td></tr>'
+  }).join('');
+  refreshFormServiceOptions();
+}
+function addCategory(){var n=prompt('Category name');if(n){cats.push({n:n,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});renderProducts()}}
+function addSubCategory(){
+  var n=prompt('Service / Sub-category name');if(!n)return;
+  var parent=prompt('Parent category','Other Services')||'Other Services';
+  if(subs.some(function(x){return x.n.toLowerCase()===n.toLowerCase()})){alert('This service already exists');return}
+  subs.push({n:n,cat:parent,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});
+  formSchemas[n]=[
+    {label:'Service Name',type:'text',required:true,note:''},
+    {label:'Description',type:'textarea',required:true,note:''},
+    {label:'Price',type:'number',required:true,note:'₹'},
+    {label:'Service Area / Address',type:'address',required:true,note:''},
+    {label:'Images',type:'image',required:false,note:'Max 6'}
+  ];
+  renderProducts();
+  openFormForService(n);
+}
+function deleteSubCategory(i){var n=subs[i].n;if(confirm('Delete '+n+' and its Vendor form?')){subs.splice(i,1);delete formSchemas[n];renderProducts();renderFormBuilder()}}
+function refreshFormServiceOptions(){
+  var sel=document.getElementById('formService');if(!sel)return;
+  var keep=sel.value;
+  sel.innerHTML=subs.map(function(x){return '<option value="'+x.n.replace(/"/g,'&quot;')+'">'+x.cat+' — '+x.n+'</option>'}).join('');
+  if(subs.some(function(x){return x.n===keep}))sel.value=keep;
+}
+function currentFormService(){var el=document.getElementById('formService');return el&&el.value?el.value:(subs[0]?subs[0].n:'')}
+function openFormForSub(i){openFormForService(subs[i].n)}
+function openFormForService(name){
+  document.querySelectorAll('.navbtn').forEach(function(x){x.classList.toggle('on',x.dataset.page==='formbuilder')});
+  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});
+  document.getElementById('page-formbuilder').classList.add('on');
+  document.getElementById('title').textContent='Service Form Builder';
+  refreshFormServiceOptions();
+  var sel=document.getElementById('formService');if(sel)sel.value=name;
+  renderFormBuilder();window.scrollTo(0,0);
+}
+function renderFormBuilder(){
+  refreshFormServiceOptions();
+  var service=currentFormService();
+  if(!service){document.getElementById('formFieldRows').innerHTML='';document.getElementById('vendorFormPreview').innerHTML='<div class="reportnote">Add a service first.</div>';return}
+  var sub=subs.find(function(x){return x.n===service});
+  var fields=formSchemas[service]||[];
+  document.getElementById('formMeta').innerHTML='<b>'+service+'</b> · '+(sub?sub.cat:'Unmapped')+' · '+fields.length+' separate vendor fields';
+  document.getElementById('formFieldRows').innerHTML=fields.map(function(x,i){
+    return '<tr><td class="num">'+(i+1)+'</td><td>'+x.label+'</td><td><span class="chip info">'+x.type+'</span></td><td>'+chip(x.required?'Required':'Optional')+'</td><td>'+((x.note||'')||'—')+'</td><td><div class="actionrow"><button class="btn sm" onclick="editFormField('+i+')">Edit</button><button class="btn sm" onclick="moveFormField('+i+',-1)">↑</button><button class="btn sm" onclick="moveFormField('+i+',1)">↓</button><button class="btn sm red" onclick="deleteFormField('+i+')">Delete</button></div></td></tr>'
+  }).join('');
+  document.getElementById('vendorFormPreview').innerHTML='<h3 style="margin:0 0 12px">'+service+'</h3>'+fields.map(previewField).join('')+'<button class="btn primary" style="width:100%;margin-top:8px">Submit '+service+'</button>';
+  renderProducts();
+}
+function previewField(x){
+  var req=x.required?' *':'';
+  if(x.type==='dropdown'||x.type==='multiselect')return '<div class="field"><label>'+x.label+req+'</label><select disabled><option>'+(x.note||'Select option')+'</option></select></div>';
+  if(x.type==='image')return '<div class="field"><label>'+x.label+req+'</label><button class="btn" disabled>Upload Images</button><small class="reportnote">'+(x.note||'')+'</small></div>';
+  if(x.type==='schedule')return '<div class="field"><label>'+x.label+req+'</label><input disabled value="Choose date / day / time"></div>';
+  if(x.type==='address')return '<div class="field"><label>'+x.label+req+'</label><input disabled placeholder="Area, landmark, city, PIN"></div>';
+  if(x.type==='textarea')return '<div class="field"><label>'+x.label+req+'</label><input disabled placeholder="Enter details"></div>';
+  return '<div class="field"><label>'+x.label+req+'</label><input disabled type="'+(x.type==='number'?'number':'text')+'" placeholder="'+(x.note||'Enter '+x.label)+'"></div>';
+}
+function addFormField(){
+  var service=currentFormService();if(!service)return;
+  var label=prompt('Field label (example: Licence Number)');if(!label)return;
+  var type=(prompt('Field type: text, number, dropdown, multiselect, address, schedule, image, textarea','text')||'text').toLowerCase();
+  var note=prompt('Options / helper note (optional)','')||'';
+  var required=confirm('Should this field be required?');
+  (formSchemas[service]||(formSchemas[service]=[])).push({label:label,type:type,required:required,note:note});
+  renderFormBuilder();
+}
+function addPresetField(type){
+  var service=currentFormService();if(!service)return;
+  var presets={image:{label:'Images',type:'image',required:false,note:'Max 6'},address:{label:'Service Address',type:'address',required:true,note:''},price:{label:'Price',type:'number',required:true,note:'₹'}};
+  (formSchemas[service]||(formSchemas[service]=[])).push(Object.assign({},presets[type]));
+  renderFormBuilder();
+}
+function editFormField(i){
+  var service=currentFormService(),x=(formSchemas[service]||[])[i];if(!x)return;
+  var label=prompt('Field label',x.label);if(label===null)return;
+  var type=prompt('Field type',x.type);if(type===null)return;
+  var note=prompt('Options / helper note',x.note||'');if(note===null)return;
+  x.label=label.trim()||x.label;x.type=type.trim().toLowerCase()||x.type;x.note=note;
+  x.required=confirm('OK = Required, Cancel = Optional');
+  renderFormBuilder();
+}
+function deleteFormField(i){var service=currentFormService();if(confirm('Delete this field from '+service+'?')){(formSchemas[service]||[]).splice(i,1);renderFormBuilder()}}
+function moveFormField(i,dir){var service=currentFormService(),a=formSchemas[service]||[],j=i+dir;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;renderFormBuilder()}
+function cloneCurrentForm(){
+  var from=currentFormService();if(!from)return;
+  var to=prompt('Copy '+from+' form to which service?');if(!to)return;
+  var target=subs.find(function(x){return x.n.toLowerCase()===to.toLowerCase()});
+  if(!target)return alert('Service not found. Add the service first.');
+  formSchemas[target.n]=(formSchemas[from]||[]).map(function(x){return Object.assign({},x)});
+  document.getElementById('formService').value=target.n;renderFormBuilder();
+}
 function promoLabel(type){return type==='poster'?'Poster':type==='offer'?'Offer Banner':'Slider Image'}
 function addPromo(type){
   var title=prompt(promoLabel(type)+' title');if(!title)return;
@@ -247,7 +428,7 @@ function rejectOrder(i){orders[i].st='Rejected';renderOrders();renderToday()}
 function blockUserFromOrder(i){var name=orders[i].u;var u=users.find(function(x){return x.n===name});if(u){u.blocked=true;renderUsers();alert(name+' blocked. Order history is preserved.')}else{alert('User record not found in demo. Order history is preserved.')}}
 function deleteUserFromOrder(i){var name=orders[i].u;if(!confirm('Delete '+name+'? Previous order records will remain saved.'))return;users=users.filter(function(x){return x.n!==name});renderUsers();alert('User deleted. Previous orders remain in Manage Orders.')}
 function renderToday(){document.getElementById('todayRows').innerHTML=orders.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.u+'</td><td>'+x.s+'</td><td>'+x.c+'</td><td>'+x.cat+'</td><td>'+x.sub+'</td><td>'+x.amt+'</td><td>'+chip(x.st)+'</td></tr>'}).join('')}
-renderDash();renderUsers();renderProducts();renderPromos();renderLiveVendors();renderPendingVendors();renderMoneyRows('serviceRows',serviceReports);renderMoneyRows('rentalRows',rentalReports);renderOrders();renderToday();
+renderDash();renderUsers();renderProducts();renderFormBuilder();renderPromos();renderLiveVendors();renderPendingVendors();renderMoneyRows('serviceRows',serviceReports);renderMoneyRows('rentalRows',rentalReports);renderOrders();renderToday();
 </script>
 </body>
 </html>
