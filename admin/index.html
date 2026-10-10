@@ -23,6 +23,7 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
     <div class="navh">Users & Catalogue</div>
     <button class="navbtn" data-page="users">◉ Users</button>
     <button class="navbtn" data-page="products">▤ Products / Categories</button>
+    <button class="navbtn" data-page="promotions">▭ Posters / Banners / Slider</button>
     <div class="navh">Service Vendors</div>
     <button class="navbtn" data-page="livevendors">● Live Vendors</button>
     <button class="navbtn" data-page="pendingvendors">◷ Pending Vendors</button>
@@ -82,6 +83,31 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
   </div>
 </section>
 
+<section class="page" id="page-promotions">
+  <div class="hint"><b>Posters / Banners / Offers / Slider:</b> Admin can add, change, enable/disable, reorder and delete promotional images shown in the User App / Website. This is demo-only until the Laravel backend is connected.</div>
+  <div class="grid stats">
+    <div class="card stat"><small>Active Posters</small><strong id="posterCount">2</strong></div>
+    <div class="card stat"><small>Active Offer Banners</small><strong id="offerCount">2</strong></div>
+    <div class="card stat"><small>Slider Images</small><strong id="sliderCount">3</strong></div>
+    <div class="card stat"><small>Visible Promotions</small><strong id="promoVisible">7</strong></div>
+  </div>
+
+  <div class="card section">
+    <div class="head"><h3>Home Posters</h3><span class="spacer"></span><button class="btn primary" onclick="addPromo('poster')">+ Add Poster</button></div>
+    <div class="tablewrap"><table><thead><tr><th>Preview</th><th>Title</th><th>Target</th><th>Status</th><th>Order</th><th>Actions</th></tr></thead><tbody id="posterRows"></tbody></table></div>
+  </div>
+
+  <div class="card section">
+    <div class="head"><h3>Offer Banners</h3><span class="spacer"></span><button class="btn primary" onclick="addPromo('offer')">+ Add Offer Banner</button></div>
+    <div class="tablewrap"><table><thead><tr><th>Preview</th><th>Title</th><th>Offer / Link</th><th>Status</th><th>Order</th><th>Actions</th></tr></thead><tbody id="offerRows"></tbody></table></div>
+  </div>
+
+  <div class="card section">
+    <div class="head"><h3>Home Slider</h3><span class="spacer"></span><button class="btn primary" onclick="addPromo('slider')">+ Add Slider Image</button></div>
+    <div class="tablewrap"><table><thead><tr><th>Preview</th><th>Title</th><th>Destination</th><th>Status</th><th>Position</th><th>Actions</th></tr></thead><tbody id="sliderRows"></tbody></table></div>
+  </div>
+</section>
+
 <section class="page" id="page-livevendors">
   <div class="hint"><b>Live Vendors:</b> State/City wise vendor list with uploaded service/product check, document verification, image verification, enable/disable, approve/reject, delete and block/unblock.</div>
   <div class="card section"><div class="head"><h3>Live Vendors</h3><span class="spacer"></span><button class="btn" onclick="downloadReport('live-vendors')">Download Report</button></div><div class="body"><div class="filters"><select id="lvState" onchange="renderLiveVendors()"><option>All States</option><option>West Bengal</option><option>Jharkhand</option></select><select id="lvCity" onchange="renderLiveVendors()"><option>All Cities</option><option>Dubrajpur</option><option>Durgapur</option><option>Dumka</option></select><select id="lvCat" onchange="renderLiveVendors()"><option>All Categories</option><option>Rental Services</option><option>Education Services</option><option>Healthcare</option></select><input id="lvSearch" class="wide" placeholder="Vendor name" oninput="renderLiveVendors()"></div></div><div class="tablewrap"><table><thead><tr><th>Vendor</th><th>State / City</th><th>Category</th><th>Uploaded</th><th>Documents</th><th>Images</th><th>Live</th><th>Final Status</th><th>Actions</th></tr></thead><tbody id="liveRows"></tbody></table></div></div>
@@ -120,13 +146,28 @@ button,input,select{font:inherit}.app{display:grid;grid-template-columns:260px 1
 <input type="file" id="imageInput" class="upload" accept="image/*">
 
 <script>
-var titles={dashboard:'Dashboard',users:'Users',products:'Products / Categories',livevendors:'Live Vendors',pendingvendors:'Pending Vendors',service:'Service Report',rental:'Rental Report',orders:'Manage Orders',today:'Today Orders'};
+var titles={dashboard:'Dashboard',users:'Users',products:'Products / Categories',promotions:'Posters / Banners / Slider',livevendors:'Live Vendors',pendingvendors:'Pending Vendors',service:'Service Report',rental:'Rental Report',orders:'Manage Orders',today:'Today Orders'};
 document.getElementById('nav').onclick=function(e){var b=e.target.closest('.navbtn');if(!b)return;document.querySelectorAll('.navbtn').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.querySelectorAll('.page').forEach(function(x){x.classList.remove('on')});document.getElementById('page-'+b.dataset.page).classList.add('on');document.getElementById('title').textContent=titles[b.dataset.page]||'Admin';window.scrollTo(0,0)};
 
 var dash=[['West Bengal','Dubrajpur','Rental Services','Car Rental',284,261,18,5,'₹4,86,300'],['West Bengal','Durgapur','Education Services','Home Tuition',198,184,11,3,'₹1,58,400'],['Jharkhand','Dumka','Healthcare','Doctor Appointment',143,130,9,4,'₹92,600']];
 var users=[{n:'Amit Kumar',p:'9876543210',s:'West Bengal',c:'Dubrajpur',cat:'Rental Services',sub:'Car Rental',on:true,blocked:false},{n:'Priya Sen',p:'9123456781',s:'West Bengal',c:'Durgapur',cat:'Education Services',sub:'Home Tuition',on:true,blocked:false},{n:'Rakesh Roy',p:'9000000003',s:'Jharkhand',c:'Dumka',cat:'Healthcare',sub:'Doctor Appointment',on:false,blocked:false}];
 var cats=[{n:'Rental Services',img:'https://placehold.co/80x80?text=Rental',on:true},{n:'Education Services',img:'https://placehold.co/80x80?text=Education',on:true},{n:'Healthcare',img:'https://placehold.co/80x80?text=Health',on:true},{n:'Other Services',img:'https://placehold.co/80x80?text=Other',on:true}];
 var subs=[{n:'Car Rental',cat:'Rental Services',img:'https://placehold.co/80x80?text=Car',on:true},{n:'Home Tuition',cat:'Education Services',img:'https://placehold.co/80x80?text=Tuition',on:true},{n:'Doctor Appointment',cat:'Healthcare',img:'https://placehold.co/80x80?text=Doctor',on:true},{n:'Home Cleaning',cat:'Other Services',img:'https://placehold.co/80x80?text=Clean',on:true}];
+var promos={
+  poster:[
+    {title:'Festival Service Poster',target:'Home App',img:'https://placehold.co/180x90?text=Festival+Poster',on:true,order:1},
+    {title:'Join ONECONECT Vendor',target:'Vendor Signup',img:'https://placehold.co/180x90?text=Vendor+Poster',on:true,order:2}
+  ],
+  offer:[
+    {title:'20% Rental Offer',target:'RENTAL20',img:'https://placehold.co/180x90?text=20%25+OFF',on:true,order:1},
+    {title:'Home Service Offer',target:'Home Cleaning',img:'https://placehold.co/180x90?text=Home+Offer',on:true,order:2}
+  ],
+  slider:[
+    {title:'Book Local Services',target:'Services',img:'https://placehold.co/180x90?text=Slider+1',on:true,order:1},
+    {title:'Fast Parcel Delivery',target:'Parcel Delivery',img:'https://placehold.co/180x90?text=Slider+2',on:true,order:2},
+    {title:'Rental Near You',target:'Rental Services',img:'https://placehold.co/180x90?text=Slider+3',on:true,order:3}
+  ]
+};
 var vendors=[{n:'Speedy Car Rental',s:'West Bengal',c:'Dubrajpur',cat:'Rental Services',up:12,doc:true,img:true,on:true,status:'Approved',blocked:false},{n:'Bright Tuition Centre',s:'West Bengal',c:'Durgapur',cat:'Education Services',up:8,doc:true,img:true,on:true,status:'Approved',blocked:false},{n:'City Care',s:'Jharkhand',c:'Dumka',cat:'Healthcare',up:5,doc:true,img:false,on:true,status:'Approved',blocked:false}];
 var pending=[{n:'Green Wheels',s:'West Bengal',c:'Dubrajpur',cat:'Rental Services',up:7,doc:false,img:true,status:'Pending'},{n:'Sunrise Coaching',s:'West Bengal',c:'Durgapur',cat:'Education Services',up:9,doc:true,img:false,status:'Pending'},{n:'Health First',s:'Jharkhand',c:'Dumka',cat:'Healthcare',up:4,doc:true,img:true,status:'Pending'}];
 var serviceReports=[['Bright Tuition Centre','Home Tuition',86,81,5,'₹68,800','₹1,200','₹800','₹6,880','₹3,440','₹55,000','₹1,480'],['City Care','Doctor Appointment',72,68,4,'₹40,800','₹500','₹300','₹4,080','₹2,040','₹32,000','₹1,880'],['Clean Home','Home Cleaning',55,49,6,'₹58,800','₹1,000','₹600','₹5,880','₹2,940','₹45,000','₹3,380']];
@@ -163,10 +204,38 @@ function renderDash(){document.getElementById('dashRows').innerHTML=dash.map(fun
 function renderUsers(){var q=(document.getElementById('uSearch').value||'').toLowerCase();document.getElementById('userRows').innerHTML=users.map(function(x,i){return {x:x,i:i}}).filter(function(o){var x=o.x;return filt(x.s,'uState')&&filt(x.c,'uCity')&&filt(x.cat,'uCat')&&filt(x.sub,'uSub')&&(x.n.toLowerCase().includes(q)||x.p.includes(q))}).map(function(o){var x=o.x,i=o.i;return '<tr><td>'+x.n+'</td><td>'+x.p+'</td><td>'+x.s+'</td><td>'+x.c+'</td><td>'+x.cat+'</td><td>'+x.sub+'</td><td>'+chip(x.blocked?'Blocked':x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="toggleUser('+i+')">'+(x.on?'Disable':'Enable')+'</button><button class="btn sm amber" onclick="blockUser('+i+')">'+(x.blocked?'Unblock':'Block')+'</button><button class="btn sm red" onclick="deleteUser('+i+')">Delete</button></div></td></tr>'}).join('')}
 function toggleUser(i){users[i].on=!users[i].on;renderUsers()}function blockUser(i){users[i].blocked=!users[i].blocked;renderUsers()}function deleteUser(i){if(confirm('Delete this user?')){users.splice(i,1);renderUsers()}}
 function openUserModal(){document.getElementById('userModal').classList.add('on')}function closeUserModal(){document.getElementById('userModal').classList.remove('on')}function saveUser(){var n=document.getElementById('mName').value.trim();if(!n)return alert('Enter user name');users.unshift({n:n,p:document.getElementById('mPhone').value,s:document.getElementById('mState').value,c:document.getElementById('mCity').value,cat:document.getElementById('mCat').value,sub:document.getElementById('mSub').value,on:true,blocked:false});closeUserModal();renderUsers()}
-var imageTarget=null;document.getElementById('imageInput').onchange=function(e){var file=e.target.files[0];if(!file||!imageTarget)return;var reader=new FileReader();reader.onload=function(){imageTarget.img=reader.result;renderProducts()};reader.readAsDataURL(file);e.target.value=''}
-function changeImage(type,i){imageTarget=type==='cat'?cats[i]:subs[i];document.getElementById('imageInput').click()}
+var imageTarget=null;var imageTargetMode='products';document.getElementById('imageInput').onchange=function(e){var file=e.target.files[0];if(!file||!imageTarget)return;var reader=new FileReader();reader.onload=function(){imageTarget.img=reader.result;if(imageTargetMode==='promos')renderPromos();else renderProducts()};reader.readAsDataURL(file);e.target.value=''}
+function changeImage(type,i){imageTarget=type==='cat'?cats[i]:subs[i];imageTargetMode='products';document.getElementById('imageInput').click()}
+function changePromoImage(type,i){imageTarget=promos[type][i];imageTargetMode='promos';document.getElementById('imageInput').click()}
 function renderProducts(){document.getElementById('catRows').innerHTML=cats.map(function(x,i){return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="changeImage(\'cat\','+i+')">Change Image</button><button class="btn sm" onclick="cats['+i+'].on=!cats['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="cats.splice('+i+',1);renderProducts()">Delete</button></div></td></tr>'}).join('');document.getElementById('subRows').innerHTML=subs.map(function(x,i){return '<tr><td><img class="thumb" src="'+x.img+'"></td><td>'+x.n+'</td><td>'+x.cat+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td><div class="actionrow"><button class="btn sm" onclick="changeImage(\'sub\','+i+')">Change Image</button><button class="btn sm" onclick="subs['+i+'].on=!subs['+i+'].on;renderProducts()">Enable/Disable</button><button class="btn sm red" onclick="subs.splice('+i+',1);renderProducts()">Delete</button></div></td></tr>'}).join('')}
 function addCategory(){var n=prompt('Category name');if(n){cats.push({n:n,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});renderProducts()}}function addSubCategory(){var n=prompt('Sub-category name');if(!n)return;var c=prompt('Parent category','Other Services')||'Other Services';subs.push({n:n,cat:c,img:'https://placehold.co/80x80?text='+encodeURIComponent(n),on:true});renderProducts()}
+function promoLabel(type){return type==='poster'?'Poster':type==='offer'?'Offer Banner':'Slider Image'}
+function addPromo(type){
+  var title=prompt(promoLabel(type)+' title');if(!title)return;
+  var target=prompt(type==='offer'?'Offer code / target':'Destination / target','Home')||'Home';
+  promos[type].push({title:title,target:target,img:'https://placehold.co/180x90?text='+encodeURIComponent(title),on:true,order:promos[type].length+1});
+  renderPromos();
+}
+function deletePromo(type,i){if(confirm('Delete this '+promoLabel(type)+'?')){promos[type].splice(i,1);normalizePromoOrder(type);renderPromos()}}
+function togglePromo(type,i){promos[type][i].on=!promos[type][i].on;renderPromos()}
+function editPromo(type,i){var x=promos[type][i];var t=prompt('Title',x.title);if(t===null)return;var target=prompt('Target / link / offer code',x.target);if(target===null)return;x.title=t.trim()||x.title;x.target=target.trim()||x.target;renderPromos()}
+function movePromo(type,i,dir){var a=promos[type],j=i+dir;if(j<0||j>=a.length)return;var tmp=a[i];a[i]=a[j];a[j]=tmp;normalizePromoOrder(type);renderPromos()}
+function normalizePromoOrder(type){promos[type].forEach(function(x,i){x.order=i+1})}
+function renderPromoTable(type,mountId){
+  var rows=promos[type].map(function(x,i){
+    return '<tr><td><img class="thumb" style="width:90px;height:48px" src="'+x.img+'"></td><td>'+x.title+'</td><td>'+x.target+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td class="num">'+x.order+'</td><td><div class="actionrow"><button class="btn sm" onclick="changePromoImage(\''+type+'\','+i+')">Change Image</button><button class="btn sm" onclick="editPromo(\''+type+'\','+i+')">Edit</button><button class="btn sm" onclick="togglePromo(\''+type+'\','+i+')">'+(x.on?'Disable':'Enable')+'</button><button class="btn sm" onclick="movePromo(\''+type+'\','+i+',-1)">↑</button><button class="btn sm" onclick="movePromo(\''+type+'\','+i+',1)">↓</button><button class="btn sm red" onclick="deletePromo(\''+type+'\','+i+')">Delete</button></div></td></tr>';
+  }).join('');
+  document.getElementById(mountId).innerHTML=rows;
+}
+function renderPromos(){
+  renderPromoTable('poster','posterRows');
+  renderPromoTable('offer','offerRows');
+  renderPromoTable('slider','sliderRows');
+  document.getElementById('posterCount').textContent=promos.poster.filter(function(x){return x.on}).length;
+  document.getElementById('offerCount').textContent=promos.offer.filter(function(x){return x.on}).length;
+  document.getElementById('sliderCount').textContent=promos.slider.length;
+  document.getElementById('promoVisible').textContent=[].concat(promos.poster,promos.offer,promos.slider).filter(function(x){return x.on}).length;
+}
 function renderLiveVendors(){var q=(document.getElementById('lvSearch').value||'').toLowerCase();document.getElementById('liveRows').innerHTML=vendors.map(function(x,i){return {x:x,i:i}}).filter(function(o){var x=o.x;return filt(x.s,'lvState')&&filt(x.c,'lvCity')&&filt(x.cat,'lvCat')&&x.n.toLowerCase().includes(q)}).map(function(o){var x=o.x,i=o.i;return '<tr><td>'+x.n+'</td><td>'+x.s+'<br><small>'+x.c+'</small></td><td>'+x.cat+'</td><td>'+x.up+' items</td><td>'+chip(x.doc)+'</td><td>'+chip(x.img)+'</td><td>'+chip(x.on?'Enabled':'Disabled')+'</td><td>'+chip(x.status)+'</td><td><div class="actionrow"><button class="btn sm" onclick="vendors['+i+'].doc=!vendors['+i+'].doc;renderLiveVendors()">Doc Verify</button><button class="btn sm" onclick="vendors['+i+'].img=!vendors['+i+'].img;renderLiveVendors()">Image Verify</button><button class="btn sm" onclick="vendors['+i+'].on=!vendors['+i+'].on;renderLiveVendors()">Enable/Disable</button><button class="btn sm green" onclick="setVendorStatus('+i+',\'Approved\')">Approve</button><button class="btn sm red" onclick="setVendorStatus('+i+',\'Rejected\')">Reject</button><button class="btn sm amber" onclick="vendors['+i+'].blocked=!vendors['+i+'].blocked;renderLiveVendors()">'+(x.blocked?'Unblock':'Block')+'</button><button class="btn sm red" onclick="deleteVendor('+i+')">Delete</button></div></td></tr>'}).join('')}
 function setVendorStatus(i,status){vendors[i].status=status;if(status==='Rejected')vendors[i].on=false;renderLiveVendors()}
 function deleteVendor(i){if(confirm('Delete this vendor?')){vendors.splice(i,1);renderLiveVendors()}}
@@ -178,7 +247,7 @@ function rejectOrder(i){orders[i].st='Rejected';renderOrders();renderToday()}
 function blockUserFromOrder(i){var name=orders[i].u;var u=users.find(function(x){return x.n===name});if(u){u.blocked=true;renderUsers();alert(name+' blocked. Order history is preserved.')}else{alert('User record not found in demo. Order history is preserved.')}}
 function deleteUserFromOrder(i){var name=orders[i].u;if(!confirm('Delete '+name+'? Previous order records will remain saved.'))return;users=users.filter(function(x){return x.n!==name});renderUsers();alert('User deleted. Previous orders remain in Manage Orders.')}
 function renderToday(){document.getElementById('todayRows').innerHTML=orders.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.u+'</td><td>'+x.s+'</td><td>'+x.c+'</td><td>'+x.cat+'</td><td>'+x.sub+'</td><td>'+x.amt+'</td><td>'+chip(x.st)+'</td></tr>'}).join('')}
-renderDash();renderUsers();renderProducts();renderLiveVendors();renderPendingVendors();renderMoneyRows('serviceRows',serviceReports);renderMoneyRows('rentalRows',rentalReports);renderOrders();renderToday();
+renderDash();renderUsers();renderProducts();renderPromos();renderLiveVendors();renderPendingVendors();renderMoneyRows('serviceRows',serviceReports);renderMoneyRows('rentalRows',rentalReports);renderOrders();renderToday();
 </script>
 </body>
 </html>
