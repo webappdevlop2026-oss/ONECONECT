@@ -116652,11 +116652,11 @@ break}if(o==="Education Services"){p.h4(new A.EG("",new A.b0Q(p),null))
 s=1
 break}if(o==="Healthcare"){p.h4(new A.Fi("",new A.b0R(p),null))
 s=1
+break}if(o==="Rental Services"){p.h4(new A.Id("",new A.b0S(p),null))
+s=1
 break}s=3
 return A.u(p.vw(),$async$tn)
 case 3:if(!c){s=1
-break}if(o==="Rental Services"){p.h4(new A.Id(p.f,new A.b0S(p),null))
-s=1
 break}if(o==="Parcel Delivery"){p.h4(new A.H8(new A.b0T(p),p.f,null))
 s=1
 break}p.h4(new A.KX(p,o,t.tk.a(a.h(0,"icon")),A.bW(a.h(0,"color")),null))
