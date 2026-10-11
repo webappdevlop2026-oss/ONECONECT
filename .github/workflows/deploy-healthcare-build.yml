@@ -1,0 +1,46 @@
+name: Deploy Healthcare build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/deploy-healthcare-build.yml
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout deploy repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download tested source artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fL             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/webappdevlop2026-oss/oneconect-source/actions/artifacts/11699327976/zip"             -o /tmp/oneconect-web.zip
+          rm -rf /tmp/oneconect-web
+          mkdir -p /tmp/oneconect-web
+          unzip -q /tmp/oneconect-web.zip -d /tmp/oneconect-web
+          test -f /tmp/oneconect-web/main.dart.js
+          test -f /tmp/oneconect-web/index.html
+
+      - name: Replace only Flutter web build
+        run: |
+          set -euo pipefail
+          rsync -a --delete             --exclude '.git/'             --exclude '.github/'             --exclude 'admin/'             /tmp/oneconect-web/ ./
+
+      - name: Commit deploy
+        run: |
+          set -euo pipefail
+          git config user.name "ONECONECT Deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Deploy Healthcare Education-style forms"
+          git push origin HEAD:main
