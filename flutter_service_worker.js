@@ -1,7 +1,4 @@
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-});
-
+self.addEventListener('install', (event) => { self.skipWaiting(); });
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
@@ -14,5 +11,4 @@ self.addEventListener('activate', (event) => {
     }
   })());
 });
-
 self.addEventListener('fetch', () => {});
